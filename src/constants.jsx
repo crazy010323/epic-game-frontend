@@ -4,10 +4,10 @@ const NETWORK_VERSION = "4";
 
 const transformCharacterData = (characterData) => ({
   name: characterData.name,
-  imageURI: characterData.imageURI,
+  imageUri: characterData.imageUri,
   hp: characterData.hp.toNumber(),
   maxHp: characterData.maxHp.toNumber(),
-  attackDamage:characterData.toNumber()
+  attackDamage:characterData.attackDamage.toNumber()
 })
 
 export {
