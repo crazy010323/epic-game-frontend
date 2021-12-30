@@ -3,6 +3,7 @@ import { ethers } from "ethers";
 
 import SelectCharacter from "./Components/SelectCharacter";
 import Arena from "./Components/Arena";
+import LoadingIndicator from "./Components/LoadingIndicator"
 
 import { CONTRACT_ADDRESS, NETWORK_VERSION, transformCharacterData } from "./constants";
 import myEpicGame from "./utils/MyEpicGame.json";
@@ -21,6 +22,7 @@ const App = () => {
    */
   const [currentAccount, setCurrentAccount] = useState();
   const [characterNFT, setCharacterNFT] = useState();
+  const [isLoading, setIsLoading] = useState(false);
 
   /*
    * Since this method will take some time, make sure to declare it as async
@@ -30,6 +32,7 @@ const App = () => {
       const { ethereum } = window;
       if ( !ethereum ) {
         console.log("Make sure you have Metamask installed on your browser!!!");
+        setIsLoading(false);
         return;
       }
       console.log("We have the ethereum object: ", ethereum);
@@ -48,6 +51,8 @@ const App = () => {
     } catch (err) {
       console.error(err);
     }
+
+    setIsLoading(false);
   }
 
   /*
@@ -85,6 +90,7 @@ const App = () => {
   // 2. If user has connected to your app AND does not have a character NFT - Show SelectCharacter Component
   // 3. If there is a connected wallet and characterNFT, it's time to battle!
   const renderContent = () => {
+    if ( isLoading ) return (<LoadingIndicator></LoadingIndicator>);
     /*
     * Scenario #1
     */
@@ -117,6 +123,7 @@ const App = () => {
   }
 
   useEffect(() => {
+    setIsLoading(true);
     checkIfWalletIsConnected();
   }, []);
 

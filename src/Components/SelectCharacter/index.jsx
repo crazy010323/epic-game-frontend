@@ -4,21 +4,27 @@ import "./SelectCharacter.css";
 import { ethers } from "ethers";
 import { CONTRACT_ADDRESS, transformCharacterData } from "../../constants";
 import myEpicGame from "../../utils/MyEpicGame.json";
+import LoadingIndicator from "../LoadingIndicator";
 
 const SelectCharacter = ({setCharacterNFT}) => {
 
   const [characterNFTs, setCharacterNFTs] = useState([]);
   const [gameContract, setGameContract] = useState();
+  const [mintingCharacter, setMintingCharacter] = useState(false);
 
   const mintCharacterNFTAction = async (index) => {
     try  {
       if ( index >= 0 && index < characterNFTs.length && gameContract ) {
+        setMintingCharacter(true);
         console.log("Minting ", characterNFTs[index].name);
-        await gameContract.mintCharacterNFT(index);
+        const mintTxn = await gameContract.mintCharacterNFT(index);
+        await mintTxn.wait();
         console.log("Minted ", characterNFTs[index]);
+        setMintingCharacter(false);
       }
     } catch ( err ) {
       console.warn("MintCharacterNFTAction Error: ", err);
+      setMintingCharacter(false);
     }
   }
 
@@ -116,6 +122,19 @@ const SelectCharacter = ({setCharacterNFT}) => {
           </div>
         )
       }
+      {/* Only show our loading state if mintingCharacter is true */}
+      {mintingCharacter && (
+        <div className="loading">
+          <div className="indicator">
+            <LoadingIndicator />
+            <p>Minting In Progress...</p>
+          </div>
+          <img
+            src="https://media2.giphy.com/media/61tYloUgq1eOk/giphy.gif?cid=ecf05e47dg95zbpabxhmhaksvoy8h526f96k4em0ndvx078s&rid=giphy.gif&ct=g"
+            alt="Minting loading indicator"
+          />
+        </div>
+      )}
     </div>
   )
 }
