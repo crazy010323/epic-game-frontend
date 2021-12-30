@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import SelectCharacter from "./Components/SelectCharacter";
 import { ethers } from "ethers";
+
+import SelectCharacter from "./Components/SelectCharacter";
+import Arena from "./Components/Arena";
 
 import { CONTRACT_ADDRESS, NETWORK_VERSION, transformCharacterData } from "./constants";
 import myEpicGame from "./utils/MyEpicGame.json";
@@ -81,6 +83,7 @@ const App = () => {
 
   // 1. If user has has not connected to your app - Show Connect To Wallet Button
   // 2. If user has connected to your app AND does not have a character NFT - Show SelectCharacter Component
+  // 3. If there is a connected wallet and characterNFT, it's time to battle!
   const renderContent = () => {
     /*
     * Scenario #1
@@ -102,9 +105,14 @@ const App = () => {
       )
     } else if ( !characterNFT ) {
       /*
-      * Scenario #1
+      * Scenario #2
       */
       return (<SelectCharacter setCharacterNFT={setCharacterNFT}></SelectCharacter>)
+    } else {
+      /*
+      * Scenario #3
+      */
+      return (<Arena characterNFT={characterNFT} setCharacterNFT={setCharacterNFT}></Arena>);
     }
   }
 
